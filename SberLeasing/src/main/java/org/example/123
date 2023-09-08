@@ -1,0 +1,47 @@
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+public class SberLeasingTest {
+    private WebDriver driver;
+
+    @BeforeEach
+    public void setUp() {
+        System.setProperty("webdriver.chrome.driver", "путь_к_драйверу\\chromedriver.exe");
+        driver = new ChromeDriver();
+    }
+
+    @Test
+    public void testSberLeasing() {
+        GoogleHomePage googleHomePage = new GoogleHomePage(driver);
+        googleHomePage.open();
+        googleHomePage.searchFor("СберЛизинг");
+
+        GoogleSearchResultsPage searchResultsPage = new GoogleSearchResultsPage(driver);
+        searchResultsPage.clickSearchResult("СберЛизинг - Официальный сайт");
+
+        SberLeasingHomePage sberLeasingHomePage = new SberLeasingHomePage(driver);
+        sberLeasingHomePage.open();
+
+        // Используйте методы из Page Object класса SberLeasingHomePage для выполнения действий на странице.
+        // Например:
+        CarSelectionPage carSelectionPage = sberLeasingHomePage.navigateToCarSelection();
+        carSelectionPage.fillCarParameters("Toyota", "Camry", 2022);
+        carSelectionPage.showAllOffers();
+
+        // Выбор автомобиля из списка и другие действия.
+
+        // Проверка марки автомобиля соответствует марке в общем списке.
+        String selectedCarMake = carSelectionPage.getSelectedCarMake();
+        // Сравнение с ожидаемым значением.
+        assertEquals("Toyota", selectedCarMake);
+    }
+
+    @AfterEach
+    public void tearDown() {
+        if (driver != null) {
+            driver.quit();
+        }
+    }
+}
